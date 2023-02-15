@@ -45,10 +45,10 @@ if __name__ == '__main__':
                 scan_range = []
                 if scan_dir_fwd:
                     scan_dir_fwd = False
-                    scan_range = range(0,180,1)
+                    scan_range = range(0,181,1)
                 else:
                     scan_dir_fwd = True
-                    scan_range = range(180,0,-1)
+                    scan_range = range(180,-1,-1)
 
                 for j in scan_range:
                     tilt.goto_angle(j)
