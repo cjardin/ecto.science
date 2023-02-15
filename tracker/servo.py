@@ -35,13 +35,23 @@ class Servo:
 
 
 if __name__ == '__main__':
+    scan_dir_fwd = True
+    deg_delay = .06
     with Servo( 18 ) as pan:
         with Servo( 17 ) as tilt:
-            for i in range(0,180,10):
+            for i in range(0,180,1):
                 pan.goto_angle(i)
-                time.sleep(.1)
-                for j in range(0,180,10):
+                time.sleep(deg_delay)
+                scan_range = []
+                if scan_dir_fwd:
+                    scan_dir_fwd = False
+                    scan_range = range(0,180,1)
+                else:
+                    scan_dir_fwd = True
+                    scan_range = range(180,0,-1)
+
+                for j in scan_range:
                     tilt.goto_angle(j)
-                    time.sleep(.1)
+                    time.sleep(deg_delay)
         
         
