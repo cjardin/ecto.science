@@ -1,0 +1,4 @@
+http://abyz.me.uk/rpi/pigpio/download.html
+
+wget https://github.com/joan2937/pigpio/archive/master.zip
+
