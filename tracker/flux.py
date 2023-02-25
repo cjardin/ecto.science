@@ -2,11 +2,13 @@ import time
 import ADS1263
 import RPi.GPIO as GPIO
 from log_cfg import logger
+import numpy
 
 class quad_flux:
     def __init__(self):
         self.REF = 5.08
         self.channelList = [0, 1, 2, 3]
+        self.offsets = [0.0] * len(self.channelList)
 
     def __enter__(self):
         self.ADC = ADS1263.ADS1263()
@@ -29,18 +31,26 @@ class quad_flux:
                 value = 0
                 if(ADC_Value[i]>>31 ==1):
                     value = self.REF*2 - ADC_Value[i] * self.REF / 0x80000000
-                    logger.debug("ADC1 IN%d = -%lf" %(i, (self.REF*2 - ADC_Value[i] * REF / 0x80000000)))
+                    #logger.debug("ADC1 IN%d = -%lf" %(i, (self.REF*2 - ADC_Value[i] * REF / 0x80000000)))
                 else:
                     value = ADC_Value[i] * self.REF / 0x7fffffff
-                    logger.debug("ADC1 IN%d = %lf" %(i, (ADC_Value[i] * self.REF / 0x7fffffff)))   # 32bit
+                    #logger.debug("ADC1 IN%d = %lf" %(i, (ADC_Value[i] * self.REF / 0x7fffffff)))   # 32bit
 
                 return_values[i] = return_values[i] + value
 
             time.sleep(sample_delay)
         for i in range(  len(self.channelList) ):
-            return_values[i] = return_values[i] / samples
+            return_values[i] = (return_values[i] / samples) + self.offsets[i]
  
         return return_values
+
+    def normalize(self,samples = 100, sample_delay = .01):
+        data = self.read( samples, sample_delay)
+        mean = numpy.mean(data)
+        for i in range(  len(self.channelList) ):
+            self.offsets[i] = mean - data[i]
+        
+        return
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.clean_up()
@@ -48,6 +58,8 @@ class quad_flux:
   
 if __name__ == '__main__':
     with  quad_flux() as flux_g:
-        print( flux_g.read() )
+        print(flux_g.read())
+
+
 
 
