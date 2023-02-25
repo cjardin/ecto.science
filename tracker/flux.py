@@ -1,0 +1,53 @@
+import time
+import ADS1263
+import RPi.GPIO as GPIO
+from log_cfg import logger
+
+class quad_flux:
+    def __init__(self):
+        self.REF = 5.08
+        self.channelList = [0, 1, 2, 3]
+
+    def __enter__(self):
+        self.ADC = ADS1263.ADS1263()
+        if (self.ADC.ADS1263_init_ADC1('ADS1263_400SPS') == -1):
+            logger.error("ADC Init Error")
+            raise Exception("ADC Init Error") 
+        self.ADC.ADS1263_SetMode(0)
+        return self
+
+    def clean_up(self):
+        self.ADC.ADS1263_Exit()
+        pass
+
+
+    def read(self, samples = 100, sample_delay = .01):
+        return_values = [0.0] * len(self.channelList)
+        ADC_Value = self.ADC.ADS1263_GetAll(self.channelList) 
+        for l in range(samples):
+            for i in self.channelList:
+                value = 0
+                if(ADC_Value[i]>>31 ==1):
+                    value = self.REF*2 - ADC_Value[i] * self.REF / 0x80000000
+                    logger.debug("ADC1 IN%d = -%lf" %(i, (self.REF*2 - ADC_Value[i] * REF / 0x80000000)))
+                else:
+                    value = ADC_Value[i] * self.REF / 0x7fffffff
+                    logger.debug("ADC1 IN%d = %lf" %(i, (ADC_Value[i] * self.REF / 0x7fffffff)))   # 32bit
+
+                return_values[i] = return_values[i] + value
+
+            time.sleep(sample_delay)
+        for i in range(  len(self.channelList) ):
+            return_values[i] = return_values[i] / samples
+ 
+        return return_values
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.clean_up()
+
+  
+if __name__ == '__main__':
+    with  quad_flux() as flux_g:
+        print( flux_g.read() )
+
+
