@@ -50,7 +50,7 @@ class quad_flux:
         for i in range(  len(self.channelList) ):
             self.offsets[i] = mean - data[i]
         
-        return
+        return mean
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.clean_up()
