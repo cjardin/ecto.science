@@ -15,25 +15,24 @@ if __name__ == '__main__':
      median = flux_g.normalize()
      time.sleep(1)
     
-     with Servo( 27 ) as pan:
-        with Servo( 22 ) as tilt:
-            for i in range(0,180,1):
-                #pan.goto_angle(i)
+     with Servo( 0 ) as pan:
+        with Servo( 1 ) as tilt:
+            for i in range(0,180,10):
+                pan.goto_angle(i)
                 scan_range = []
                 if scan_dir_fwd:
                     scan_dir_fwd = False
-                    scan_range = range(0,181,1)
+                    scan_range = range(0,181,10)
                 else:
                     scan_dir_fwd = True
-                    scan_range = range(180,-1,-1)
+                    scan_range = range(180,-1,-10)
 
                 for j in scan_range:
-                    #tilt.goto_angle(j)
+                    tilt.goto_angle(j)
             
                     if (i,j) not in data:
                         data[ (i,j) ] = []
                     data[ (i,j) ].append( flux_g.read() ) 
-                    time.sleep(1)
 
                         
         

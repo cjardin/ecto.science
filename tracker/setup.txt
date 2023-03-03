@@ -7,3 +7,8 @@ sudo apt-get install p7zip-full
 
 https://www.waveshare.com/w/upload/6/6c/Servo_Driver_HAT.7z
 
+https://www.waveshare.com/18983.htm
+
+https://www.waveshare.com/wiki/Template:Servo_Driver_HAT_Manual
+
+
