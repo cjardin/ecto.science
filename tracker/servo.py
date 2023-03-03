@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import pigpio
 import time
+from PCA9685 import PCA9685
 
 class Servo:
     def __init__(self, servoPIN):
@@ -10,10 +11,9 @@ class Servo:
         self.max_rotation_deg = 180.0
 
     def __enter__(self):
-        self.pwm = pigpio.pi('localhost', 8888)
-        self.pwm.set_mode( self.servoPIN , pigpio.OUTPUT)
-        self.pwm.set_PWM_frequency(  self.servoPIN , 50 )
-        self.pwm.set_servo_pulsewidth( self.servoPIN, 1500 ) ;
+        self.pwm = PCA9685(0x40, debug=False)
+        self.pwm.setPWMFreq(50)
+
         return self
 
     def goto_angle(self, angle):
@@ -22,12 +22,11 @@ class Servo:
 
         target_fq = ((angle / self.max_rotation_deg) * (self.max_fq - self.min_fq)) + self.min_fq
 
-        self.pwm.set_servo_pulsewidth( self.servoPIN, target_fq ) ;
+        self.pwm.setServoPulse(self.servoPIN, target_fq)
+
         return
 
     def clean_up(self):
-        self.pwm.set_PWM_dutycycle( self.servoPIN, 0 )
-        self.pwm.set_PWM_frequency( self.servoPIN, 0 )
         pass
         
     def __exit__(self, exc_type, exc_value, traceback):
@@ -37,8 +36,8 @@ class Servo:
 if __name__ == '__main__':
     scan_dir_fwd = True
     deg_delay = .06
-    with Servo( 27 ) as pan:
-        with Servo( 22 ) as tilt:
+    with Servo( 0 ) as pan:
+        with Servo( 1 ) as tilt:
             for i in range(0,180,1):
                 pan.goto_angle(i)
                 time.sleep(deg_delay)
@@ -54,4 +53,5 @@ if __name__ == '__main__':
                     tilt.goto_angle(j)
                     time.sleep(deg_delay)
         
-        
+
+

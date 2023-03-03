@@ -1,0 +1,9 @@
+sudo apt-get update
+sudo apt-get install python-pip3
+sudo pip install RPi.GPIO
+sudo apt-get install python3-smbus 
+sudo apt-get install p7zip-full
+
+
+https://www.waveshare.com/w/upload/6/6c/Servo_Driver_HAT.7z
+
