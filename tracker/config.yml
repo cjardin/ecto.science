@@ -1,0 +1,13 @@
+servos:
+    pan : 0
+    tilt : 1
+    scan_step : 2
+    deg_delay : .02
+
+sensors:
+    up : 1
+    down : 2
+    clockwise : 0
+    cclockwise: 3
+ 
+
