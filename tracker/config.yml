@@ -6,8 +6,8 @@ servos:
 
 sensors:
     up : 1
-    down : 2
+    down : 3
     clockwise : 0
-    cclockwise: 3
+    cclockwise: 2
  
 

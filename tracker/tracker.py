@@ -56,11 +56,35 @@ def chase(pan, tilt, flux_g):
     cur_pan_angle = 90;
     cur_tilt_angle = 90;
     while True:
-        data = flux_g.read()
-        print(data)
+        data = flux_g.read(50)
+
+        #print(data)
         largest = compute_biggest_delta(data)
-        print(largest);
-        time.sleep(1);
+
+        print(largest)
+
+        if largest[0] == yml_configs['sensors']['up']:
+            cur_tilt_angle -= 1
+
+        if largest[0] == yml_configs['sensors']['down']:
+            cur_tilt_angle += 1
+
+        if largest[0] == yml_configs['sensors']['clockwise']:
+            cur_pan_angle += 1
+
+        if largest[0] == yml_configs['sensors']['cclockwise']:
+            cur_pan_angle -= 1
+
+        if cur_pan_angle > 180:
+            cur_pan_angle = 180
+        elif cur_pan_angle < 0:
+            cur_pan_angle = 0
+
+
+        if cur_tilt_angle > 180:
+            cur_tilt_angle = 180 
+        elif cur_tilt_angle < 0:
+            cur_tilt_angle = 0 
 
         pan.goto_angle(cur_pan_angle)
         tilt.goto_angle(cur_tilt_angle)
