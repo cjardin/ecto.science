@@ -8,6 +8,8 @@ import math
 
 import yaml
 
+import random
+
 yml_configs = {}
 with open('config.yml', 'r') as yml_file:
     yml_configs = yaml.safe_load(yml_file)
@@ -77,14 +79,20 @@ def chase(pan, tilt, flux_g):
 
         if cur_pan_angle > 180:
             cur_pan_angle = 180
+            #jiggle the other axis
+            cur_tilt_angle += random.choice([-1,1])
+
         elif cur_pan_angle < 0:
             cur_pan_angle = 0
+            cur_tilt_angle += random.choice([-1,1])
 
 
         if cur_tilt_angle > 180:
             cur_tilt_angle = 180 
+            cur_pan_angle += random.choice([-1,1])
         elif cur_tilt_angle < 0:
             cur_tilt_angle = 0 
+            cur_pan_angle += random.choice([-1,1])
 
         pan.goto_angle(cur_pan_angle)
         tilt.goto_angle(cur_tilt_angle)

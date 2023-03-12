@@ -44,7 +44,7 @@ class quad_flux:
  
         return return_values
 
-    def normalize(self,samples = 100, sample_delay = .01):
+    def normalize(self,samples = 1000, sample_delay = .01):
         data = self.read( samples, sample_delay)
         mean = numpy.mean(data)
         for i in range(  len(self.channelList) ):
@@ -57,8 +57,15 @@ class quad_flux:
 
   
 if __name__ == '__main__':
+    from db_con import get_db, get_cursor
+    #create table flux_data_array(s1 numeric, s2 numeric, s3 numeric, s4 numeric);
+    db = get_db()
+    cur = get_cursor(db)
     with  quad_flux() as flux_g:
-        print(flux_g.read())
+        data = flux_g.read()
+        cur.execute("insert into flux_data_array( ? , ? , ? ,?)", data)
+        db.commit()
+        time.sleep(.1)
 
 
 

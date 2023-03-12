@@ -1,12 +1,12 @@
 servos:
-    pan : 0
+    pan : 0 
     tilt : 1
     scan_step : 2
     deg_delay : .02
 
 sensors:
-    up : 1
-    down : 3
+    up : 3
+    down : 1
     clockwise : 0
     cclockwise: 2
  
