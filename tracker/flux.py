@@ -62,10 +62,12 @@ if __name__ == '__main__':
     db = get_db()
     cur = get_cursor(db)
     with  quad_flux() as flux_g:
-        data = flux_g.read()
-        cur.execute("insert into flux_data_array( ? , ? , ? ,?)", data)
-        db.commit()
-        time.sleep(.1)
+        while True:
+            data = flux_g.read()
+            cur.execute(f"insert into flux_data_array values ( {str(data[0:4]).replace('[', '').replace(']','')});")
+            db.commit()
+            time.sleep(.1)
+
 
 
 
