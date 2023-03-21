@@ -29,6 +29,9 @@ n_test = 100  # number of testing points
 X_train, X_test, y_train, y_test = generate_data(
     n_train=n_train, n_test=n_test, contamination=contamination)
 
+print(X_train)
+print(y_train)
+
 clf.fit(X_train)
 
 
