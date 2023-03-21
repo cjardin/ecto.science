@@ -1,5 +1,12 @@
 from pyod.models.suod import SUOD
 from pyod.utils.data import evaluate_print
+from pyod.models.lof import LOF
+from pyod.models.iforest import IForest
+from pyod.models.copod import COPOD
+from pyod.utils.utility import standardizer
+from pyod.utils.data import generate_data
+from pyod.utils.data import evaluate_print
+from pyod.utils.example import visualize
 
 
 # initialized a group of outlier detectors for acceleration
@@ -10,7 +17,7 @@ detector_list = [LOF(n_neighbors=15), LOF(n_neighbors=20),
 
 # decide the number of parallel process, and the combination method
 # then clf can be used as any outlier detection model
-clf = SUOD(base_estimators=detector_list, n_jobs=10, combination='average',
+clf = SUOD(base_estimators=detector_list, n_jobs=2, combination='average',
            verbose=False)
 
 
